@@ -1,8 +1,8 @@
-/* 
- * INF559 Data Lab 
- * 
- * <Please put your name and userid here>
- * 
+/*
+ * INF559 Data Lab
+ *
+ * NAME: Le Duc Hieu        USER_ID: hieu.le
+ *
  * bits.c - Source file with your solutions to the Lab.
  *          This is the file you will hand in to your instructor.
  *
@@ -10,7 +10,7 @@
  * compiler. You can still use printf for debugging without including
  * <stdio.h>, although you might get a compiler warning. In general,
  * it's not good practice to ignore compiler warnings, but in this
- * case it's OK.  
+ * case it's OK.
  */
 
 #if 0
@@ -143,135 +143,155 @@ NOTES:
 /* We do not support C11 <threads.h>.  */
 /* bit manipulation */
 /*
- * func1 - returns 1 if x == 0, and 0 otherwise 
+ * func1 - returns 1 if x == 0, and 0 otherwise
  *   Examples: func1(5) = 0, func1(0) = 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 2
  *   Rating: 1
  */
-int func1(int x) {
+int func1(int x)
+{
   return !x;
 }
-/* 
- * func2 - ~(x|y) using only ~ and & 
+/*
+ * func2 - ~(x|y) using only ~ and &
  *   Example: func2(0x6, 0x5) = 0xFFFFFFF8
  *   Legal ops: ~ &
  *   Max ops: 8
  *   Rating: 1
  */
-int func2(int x, int y) {
+int func2(int x, int y)
+{
   return (~x) & (~y);
 }
-/* 
- * func3 - x&~y using only ^ and & 
- *   Example: func3(1,2) = 1, func3(0,1) = 0, 0 
+/*
+ * func3 - x&~y using only ^ and &
+ *   Example: func3(1,2) = 1, func3(0,1) = 0, 0
  *   Legal ops: & | ^
  *   Max ops: 8
  *   Rating: 1
  */
-int func3(int x, int y) {
+int func3(int x, int y)
+{
   return (x ^ y) & x;
 }
-/* 
+/*
  * func4 - swap the first 16 bits of x with the last 16 bits of x
  *   Examples: func4(0x87654321) = 0x08765432, func4(0x12345678) = 0x56781234
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 2
  */
-int func4(int x) {
-  return (x >> 16) | (x << 16);
+int func4(int x)
+{
+  int c = ~((~0) << 16);
+  return (x >> 16) & c | (x << 16);
 }
-/* 
+/*
  * func5 - set all bits of result to least significant bit of x
  *   Example: func5(5) = 0xFFFFFFFF, func5(6) = 0x00000000
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 5
  *   Rating: 2
  */
-int func5(int x) {
+int func5(int x)
+{
   return (~0) << (!(x & 1) << 5);
 }
-/* 
+/*
  * func6 - return 1 if all even-numbered bits in word set to 1
  *   Examples func6(0xFFFFFFFE) = 0, func6(0x55555555) = 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 12
  *   Rating: 2
  */
-int func6(int x) {
+int func6(int x)
+{
   x &= x >> 16;
   x &= x >> 8;
   x &= x >> 4;
   x &= x >> 2;
   return x & 1;
 }
-/* 
+/*
  * func7 - shift x to the right by n, using a logical shift
  *   Can assume that 0 <= n <= 31
  *   Examples: func7(0x87654321,4) = 0x08765432
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
- *   Rating: 3 
+ *   Rating: 3
  */
-int func7(int x, int n) {
-  return ~(~0 << (33 + ~n)) & (x >> n);
+int func7(int x, int n)
+{
+  int c = (x >> 31 & 1 & (!!n));
+  return (x >> n) ^ (c << 31 >> (n + ~0));
 }
 /* 2's complement */
-/* 
- * func8 - return minimum two's complement integer 
+/*
+ * func8 - return minimum two's complement integer
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 4
  *   Rating: 1
  */
-int func8(void) {
+int func8(void)
+{
   return 1 << 31;
 }
 /*
  * func9 - returns 1 if x is the maximum, two's complement number,
- *     and 0 otherwise 
+ *     and 0 otherwise
  *   Legal ops: ! ~ & ^ | +
  *   Max ops: 10
  *   Rating: 1
  */
-int func9(int x) {
-  return !(x ^ (~ (1 << 31)));
+int func9(int x)
+{
+  return !(x ^ (~(1 << 31)));
 }
-/* 
- * func10 - return -x 
+/*
+ * func10 - return -x
  *   Example: func10(1) = -1.
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 5
  *   Rating: 2
  */
-int func10(int x) {
+int func10(int x)
+{
   return ~x + 1;
 }
-/* 
+/*
  * func11 - Determine if can compute x+y without overflow
  *   Example: func11(0x80000000,0x80000000) = 0,
- *            func11(0x80000000,0x70000000) = 1, 
+ *            func11(0x80000000,0x70000000) = 1,
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 20
  *   Rating: 3
  */
-int func11(int x, int y) {
+int func11(int x, int y)
+{
   int z = x + y;
   int a = x >> 31;
   int b = y >> 31;
   int c = z >> 31;
-  return !(!(a^b) & ((a^c) | (b^c)));
+  return !(!(a ^ b) & ((a ^ c) | (b ^ c)));
 }
-/* 
- * func12 - if x > y  then return 1, else return 0 
+/*
+ * func12 - if x > y  then return 1, else return 0
  *   Example: func12(4,5) = 0, func12(5,4) = 1
  *   Legal ops: ! ~ & ^ | + << >>
  *   Max ops: 24
  *   Rating: 3
  */
-int func12(int x, int y) {
-  x += ~y + 1;
-  return !(x >> 31);
+int func12(int x, int y)
+{
+  int xNegative = (x >> 31) & 1;
+  int yNegative = (y >> 31) & 1;
+  int diff = x + ~y + 1;
+  int notEqual = !!diff;
+  int diffNegative = (diff >> 31 & 1);
+
+  int answer = (!xNegative & yNegative) | (!(xNegative ^ yNegative) & notEqual & (!diffNegative));
+  return answer;
 }
 /*
  * func13 - adds two numbers but when positive overflow occurs, returns
@@ -283,7 +303,8 @@ int func12(int x, int y) {
  *   Max ops: 30
  *   Rating: 4
  */
-int func13(int x, int y) {
+int func13(int x, int y)
+{
   int z = x + y;
   int a = x >> 31;
   int b = y >> 31;
